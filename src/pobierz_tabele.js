@@ -48,7 +48,16 @@ export function PokazAll(e){
          'klucz_nr': sel.target.id,
          'klucz_idprac': sel.target.value,
        })
-     }).then(msg=> msg.json()).then(res=>console.log(res))
+     }).then((response) => {
+      if (response.ok) {  
+        
+        
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    }).then(res=>console.log(res));
+     
     
  }
 

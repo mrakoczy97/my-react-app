@@ -19,12 +19,10 @@ class Wylogowanie extends React.Component{
     this.wyloguj=this.wyloguj.bind(this);
   }
   wyloguj() {
-    
     Cookies.remove('log_auth');
+    Cookies.remove("zalogowany");
     this.props.handlelogged(false);
     window.location.reload();
-    
-    
   }
  
   render(){
@@ -73,14 +71,18 @@ class Logowanie extends React.Component{
       } else {
         throw new Error('Something went wrong');
       }
-    }).then(json => json ?  Cookies.set("log_auth", json[0][0]) : null).catch((error) => {
-      alert(error);
+    }).then(json => json ?  this.ustawCiasteczka(json) : null ).catch((error) => {
+     // alert(error);
+     alert("Błędne dane! Sprawdź czy dane są poprawne")
     });
      
     // .then(json =>this.zaloguj(json))
   }
 
-
+  ustawCiasteczka=(e)=>{
+    Cookies.set("log_auth", e[0][0]);
+    Cookies.set("zalogowany", e[0][1]);
+  }
 
   handleChangeLog = (e) => {
     this.setState({
@@ -91,10 +93,10 @@ class Logowanie extends React.Component{
 render(){
   return(
     <form onSubmit={this.handleSubmitLog} >
-          <div className='col-md-12'><div className='form-row' >
-            <div className='form-group col-md-3'><label htmlFor="inputEmail4">Login</label>
+          <div className='col-md-12'style={{marginLeft:'95%'}}><div className='form-row'  >
+            <div className='form-group col-md-4'><label htmlFor="inputEmail4">Login</label>
               <input type="text" name='imie' value={this.state.imie} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputlogin" />
-            </div><div className='form-group col-md-3'><label htmlFor="inputEmail4">Hasło</label>
+            </div><div className='form-group col-md-4'><label htmlFor="inputEmail4">Hasło</label>
               <input type="password" name='haslo' value={this.state.haslo} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputhaslo" />
             </div><div className='form-group col-md-1'><label>Zaloguj</label><input id="wyslij" type="submit" value="Logowanie" className="btn btn-primary" />
             </div>
@@ -112,7 +114,7 @@ class AppHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tab: "",
+      tab: "formularz",
       zalogowany:false,
       update:false,
       kto:''
@@ -135,6 +137,7 @@ class AppHeader extends React.Component {
   
   handleClick = async (e) => {
     let ifexist;
+    this.setState({tab:e.target.attributes.tab.value});
     e.preventDefault();
     if (Cookies.get("log_auth") == null) {
       
@@ -165,10 +168,10 @@ class AppHeader extends React.Component {
     }
     
     
-    // console.log(ifexist);
-    //  await this.setState({tab:e.target.attributes.tab.value});
-    //console.log(this.state.tab);
+
   }
+
+
 
 handleParentlogged = async (e) => {
       await this.setState({ islogged: e});
@@ -176,16 +179,16 @@ handleParentlogged = async (e) => {
 
   render() {
     return (
-      <div className='row'>
-        {(Cookies.get("log_auth"|| !this.state.zalogowany)==null?<Logowanie handlelogged={this.handleParentlogged}/>:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
+      <div className='row'> {(Cookies.get("log_auth"|| !this.state.zalogowany)==null?<Logowanie   handlelogged={this.handleParentlogged}/>:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
         
+       {(Cookies.get("zalogowany")!=null?<h2 style={{marginLeft:'35%'}}>Witaj {Cookies.get("zalogowany")}</h2>:null)}
         <div className='col-md-12'>
           {(Cookies.get("log_auth") == null)?null:<div className='form-row' >
-          <div className='form-group col-md-3'><a className="btn btn-info btn-block" tab='formularz' onClick={this.handleClick} href={this.state.tab}>Formularz zgłoszeniowy</a></div>
-          <div className='form-group col-md'><a className="btn btn-danger btn-block" tab="nieprzypisane" onClick={this.handleClick} href={this.state.tab}>Reklamacje nieprzypisane</a></div>
-          <div className='form-group col-md'><a className="btn btn-success btn-block" tab="" onClick={this.handleClick} href={this.state.tab}>Moje reklamacje</a></div>
-          <div className='form-group col-md'><a className="btn btn-info btn-block" tab="wszystkie" onClick={this.handleClick} href={this.state.tab}>Wszystkie reklamacje</a></div>
-          <div className='form-group col-md'><a className="btn  btn-warning btn-block" tab="zakonczone" onClick={this.handleClick} href={this.state.tab}>Zakończone</a></div>
+          <div className='form-group col-md-3'><a className={"btn btn-"+(this.state.tab=='formularz'?"success":"info")+" btn-block"} tab='formularz' onClick={this.handleClick} href={this.state.tab}>Formularz zgłoszeniowy</a></div>
+          <div className='form-group col-md'><a className={"btn btn-"+(this.state.tab=='nieprzypisane'?"success":"info")+" btn-block"} tab="nieprzypisane" onClick={this.handleClick} href={this.state.tab}>Reklamacje nieprzypisane</a></div>
+          <div className='form-group col-md'><a className={"btn btn-"+(this.state.tab=="moje"?"success":"info")+" btn-block"} tab="moje" onClick={this.handleClick} href={this.state.tab}>Moje reklamacje</a></div>
+          <div className='form-group col-md'><a className={"btn btn-"+(this.state.tab=='wszystkie'?"success":"info")+" btn-block"} tab="wszystkie" onClick={this.handleClick} href={this.state.tab}>Wszystkie reklamacje</a></div>
+          <div className='form-group col-md'><a className={"btn btn-"+(this.state.tab=='zakonczone'?"success":"info")+" btn-block"} tab="zakonczone" onClick={this.handleClick} href={this.state.tab}>Zakończone</a></div>
         </div>}
            </div></div>
     );
@@ -488,9 +491,23 @@ class Testuje extends React.Component {
   }
   async componentDidUpdate(prevProps) {
     if (prevProps.what !== this.props.what) {
+      if(this.props.moje)
+      {
+       // console.log(""+Cookies.get("log_auth"));
+      }
       await this.setState({ strona: this.props.what })
       await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
-        .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what)
+        .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
+          method:'POST',
+          headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'klucz_cookie': Cookies.get("log_auth"),
+            
+          })
+        })
           .then(res => res.json())
           .then(json => this.setState({ status: PokazAll(json) })
           ))
@@ -523,13 +540,9 @@ class Testuje extends React.Component {
         'klucz_nr': klucz,
       })
     }).then(res => res.json())
-      .then(this.ustawstate);
+      .then(this.forceUpdate());
   }
-  ustawstate = async () => {
-    console.log(this.state.reqKey);
-    await this.setState({ reqKey: Math.random() });
-    console.log(this.state.reqKey);
-  }
+  
   details(info) {
     let buttonval = info.target.attributes.getNamedItem('aria-expanded').value;
     if (buttonval === 'false') {
@@ -556,7 +569,7 @@ class Testuje extends React.Component {
       wszyscypracownicy.push(temp);
     }
     );
-    console.log(wszyscypracownicy);
+   // console.log(wszyscypracownicy);
     this.setState({ pracownicy: wszyscypracownicy })
   }
 
@@ -640,7 +653,9 @@ class App extends React.Component {
               return <Testuje what="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" />
             case "zakonczone":
               return <Testuje what="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" />
-            default:
+            case"moje":
+              return <Testuje moje="true" what="http://localhost/system_reklamacji/php/pobierz_moje.php"/>
+            default:  
               return <Formularz />
           }
         })()}
