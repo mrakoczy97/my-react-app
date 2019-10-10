@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/complaintssystem/static/css/main.809cde28.chunk.css",
+    "main.js": "/complaintssystem/static/js/main.5b837fd3.chunk.js",
+    "main.js.map": "/complaintssystem/static/js/main.5b837fd3.chunk.js.map",
+    "runtime~main.js": "/complaintssystem/static/js/runtime~main.b324071f.js",
+    "runtime~main.js.map": "/complaintssystem/static/js/runtime~main.b324071f.js.map",
+    "static/js/2.8c28ae90.chunk.js": "/complaintssystem/static/js/2.8c28ae90.chunk.js",
+    "static/js/2.8c28ae90.chunk.js.map": "/complaintssystem/static/js/2.8c28ae90.chunk.js.map",
+    "index.html": "/complaintssystem/index.html",
+    "precache-manifest.4b04e3e86e0f80b35451b88f9696b703.js": "/complaintssystem/precache-manifest.4b04e3e86e0f80b35451b88f9696b703.js",
+    "service-worker.js": "/complaintssystem/service-worker.js",
+    "static/css/main.809cde28.chunk.css.map": "/complaintssystem/static/css/main.809cde28.chunk.css.map"
+  }
+}
