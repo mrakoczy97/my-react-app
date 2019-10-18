@@ -13,7 +13,8 @@ export function PokazAll(e){
         'fv':element[4],
         'firma':element[5],
         'data':element[6],
-        'kierowca':element[7]
+        'pliki':element[7],
+        
         
       };
       tabela.push(temp);
@@ -51,7 +52,7 @@ export function PokazAll(e){
      }).then((response) => {
       if (response.ok) {  
         
-        
+        alert("Zmieniono osobę pomyślnie");
         return response.json();
       } else {
         throw new Error('Something went wrong');

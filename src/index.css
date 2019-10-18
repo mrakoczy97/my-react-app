@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #faf1c0;
+  
 }
 
 code {
@@ -41,18 +43,11 @@ ul.ui.list li:before {
   font-weight: bolder;
   cursor:pointer;
   margin-top:10px;
+  
+  
 }
 
-.delete{
-  color:white;
-  background-color:rgb(231, 76, 60);
-  text-align:center;
-  margin-top:6px;
-  font-weight:700;
-  border-radius:5px;
-  min-width:20px;
-  cursor:pointer;
-}
+
 
 #singlebutton{
   width:100%;
@@ -153,6 +148,20 @@ tr.sztywno{
   
  
 }
+.red{
+  color:red;
+  font-family:Arial, Helvetica, sans-serif;
+  font-weight:bolder;
+  font-size: 130%;
+  text-decoration: none;
+}
+.centruj2{
+  
+  
+  text-align: center;
+  
+  
+}
 .centruj{
   
   
@@ -162,4 +171,118 @@ tr.sztywno{
 }
 .pokoloruj{
   background-color: aquamarine;
+}
+/* Tooltip container */
+.dohovera {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.dohovera .hoveruje {
+  visibility: hidden;
+  width: auto;
+  
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.dohovera:hover .hoveruje {
+  visibility: visible;
+}
+.fileupdate {
+	background:linear-gradient(to bottom, #f0d239 5%, #cca635 100%);
+	background-color:#f0d239;
+	border-radius:12px;
+	border:3px solid #5d4f09;
+	display:inline-block;
+	cursor:pointer;
+	color:#5d4f09;
+	font-family:Arial;
+	font-size:23px;
+	padding:10px 35px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #a83703;
+}
+.fileupdate:focus,
+.fileupdate:hover {
+	background:linear-gradient(to bottom, #cca635 5%, #f0d239 100%);
+	background-color:#cca635;
+}
+.fileupdate:active {
+	position:relative;
+	top:1px;
+}
+.full{
+  width:100%;
+}
+.container-form{
+  background-color: #f5e698;
+  border-radius: 1%;
+  margin-top:50px;
+  margin-bottom:50px;
+  
+  border:10px #8b760e solid;
+}
+.form-control{
+  background-color: #faf1c0;
+  border-color: black;
+}
+.delete{
+  color:white;
+  background-color:rgb(231, 76, 60);
+  text-align:center;
+  margin-top:6px;
+  font-weight:700;
+  border-radius:5px;
+  min-width:20px;
+  cursor:pointer;
+}
+.delete:hover{
+  background-color: darkred;
+  color:blanchedalmond;
+}
+.notka{
+  width:auto;
+  font-weight: bold;
+  font-size: 90%;
+  border-color:rgba(93, 79, 9, 0.3);
+  border-top-style:groove ;
+  border-bottom-style:groove ;
+  border-radius:10px;
+  
+  
+  
+}
+.przycisk{
+  text-decoration:none;
+  border-color: green;
+  border-style: solid;
+  padding:  5px;
+  border-radius: 20px;
+  background-color: #faf1c0;
+  
+}
+.przycisk:hover{
+  
+  background-color: #f2db5a;
+  border-color:darkgreen;
+  color:darkgreen;
+  
+}
+.h5-form{
+  margin-top:-10px;
+  color:#5d4f09;
+  
+}
+.h1-form{
+  margin-top:20px;
+  color:#5d4f09;
 }
