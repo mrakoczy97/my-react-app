@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/complaintssystem/static/css/main.3f744878.chunk.css",
-    "main.js": "/complaintssystem/static/js/main.c04e8793.chunk.js",
-    "main.js.map": "/complaintssystem/static/js/main.c04e8793.chunk.js.map",
+    "main.js": "/complaintssystem/static/js/main.31553aca.chunk.js",
+    "main.js.map": "/complaintssystem/static/js/main.31553aca.chunk.js.map",
     "runtime~main.js": "/complaintssystem/static/js/runtime~main.b324071f.js",
     "runtime~main.js.map": "/complaintssystem/static/js/runtime~main.b324071f.js.map",
     "static/js/2.f1891572.chunk.js": "/complaintssystem/static/js/2.f1891572.chunk.js",
     "static/js/2.f1891572.chunk.js.map": "/complaintssystem/static/js/2.f1891572.chunk.js.map",
     "index.html": "/complaintssystem/index.html",
-    "precache-manifest.b59e437f6bb229cef06db927aebab8e5.js": "/complaintssystem/precache-manifest.b59e437f6bb229cef06db927aebab8e5.js",
+    "precache-manifest.52683c81758e4e3ac5bd82e0838d0d6c.js": "/complaintssystem/precache-manifest.52683c81758e4e3ac5bd82e0838d0d6c.js",
     "service-worker.js": "/complaintssystem/service-worker.js",
     "static/css/main.3f744878.chunk.css.map": "/complaintssystem/static/css/main.3f744878.chunk.css.map"
   }
