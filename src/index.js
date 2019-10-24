@@ -6,9 +6,10 @@ import { getval, PokazAll, ReklamacjaIndy } from './pobierz_tabele.js';
 import * as serviceWorker from './serviceWorker';
 import $ from 'jquery';
 import Popup from './functions.js';
+import ModalImage from "react-modal-image";
 
 //Cookies.remove("log_auth");
-console.log(Cookies.get("log_auth"));
+//console.log(Cookies.get("log_auth"));
 
 class FileUpload extends React.Component{
   
@@ -93,14 +94,14 @@ class Wylogowanie extends React.Component{
   wyloguj() {
     Cookies.remove('log_auth');
     Cookies.remove("zalogowany");
-    sessionStorage.setItem('tab','formularz');
+    sessionStorage.setItem('tab','x');
     this.props.handlelogged(false);
     window.location.reload();
   }
  
   render(){
     return(
-      <input className='form-group col-md-1' type='button' onClick={this.wyloguj} value="wyloguj"></input>
+      <input className='logout' type='button' onClick={this.wyloguj} value="Wyloguj się"></input>
     )
   }
 }
@@ -137,14 +138,19 @@ class Logowanie extends React.Component{
 
       })
     }).then((response) => {
-      if (response.ok) {  
-        this.props.handlelogged(true);
-        window.location.reload();
+      if (response) {  
+        console.log();
+        
+        
+        
+        
         return response.json();
+        
       } else {
         throw new Error('Something went wrong');
       }
-    }).then(json => json ?  this.ustawCiasteczka(json) : null ).catch((error) => {
+    }).then(json => json ?  (this.ustawCiasteczka(json),this.props.handlelogged(true),
+        sessionStorage.setItem('tab','moje'),window.location.reload()) : null ).catch((error) => {
      // alert(error);
      alert("Błędne dane! Sprawdź czy dane są poprawne")
     });
@@ -165,16 +171,21 @@ class Logowanie extends React.Component{
 
 render(){
   return(
-    <form onSubmit={this.handleSubmitLog} >
-          <div className='col-md-12'style={{marginLeft:'95%'}}><div className='form-row'  >
-            <div className='form-group col-md-4'><label htmlFor="inputEmail4">Login</label>
+    <div className="srodek ">
+    <form className='relat' onSubmit={this.handleSubmitLog} >
+          <div className='col-md-12'><div className='form-row'  >
+          <div className='form-group col-md-12'><label htmlFor="inputEmail4"><h2>Logowanie</h2><h4> do panelu zarządzania reklamacjami</h4></label>
+              
+            </div>
+
+            <div className='form-group col-md-12'><label htmlFor="inputEmail4">Login</label>
               <input type="text" name='imie' value={this.state.imie} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputlogin" />
-            </div><div className='form-group col-md-4'><label htmlFor="inputEmail4">Hasło</label>
+            </div><div className='form-group col-md-12'><label htmlFor="inputEmail4">Hasło</label>
               <input type="password" name='haslo' value={this.state.haslo} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputhaslo" />
-            </div><div className='form-group col-md-1'><label>Zaloguj</label><input id="wyslij" type="submit" value="Logowanie" className="btn btn-primary" />
+            </div><div className='form-group col-md-12'><input id="wyslij" type="submit" value="Zaloguj się" className="fileupdate" />
             </div>
             <label className='form-group col-md-1' ></label>
-          </div></div> </form>
+          </div></div> </form></div>
   )
 }
 
@@ -250,13 +261,14 @@ class AppHeader extends React.Component {
 
 handleParentlogged = async (e) => {
       await this.setState({ islogged: e});
+      console.log(this.state.islogged);
     }
 
   render() {
     return (
-      <div className='row'> {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?<Logowanie   handlelogged={this.handleParentlogged}/>:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
+      <div className='row'> {(!Cookies.get("log_auth") && !Cookies.get("zalogowany") && (this.state.zalogowany)!==null?<Logowanie   handlelogged={this.handleParentlogged}/>:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
         
-       {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:<h2 style={{marginLeft:'35%'}}>Witaj {Cookies.get("zalogowany")}</h2>)}
+       {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:<h2 className="powitanie" style={{marginLeft:'0.8%'}}>Witaj {Cookies.get("zalogowany")}</h2>)}
         {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:
         <div className='col-md-12'>
           {(Cookies.get("log_auth") === null)?null:<div className='form-row' >
@@ -287,6 +299,7 @@ handleParentlogged = async (e) => {
 }
 //
 //
+let TMP_NR;
 class Formularz extends React.Component {
   constructor(props) {
     super(props);
@@ -319,7 +332,7 @@ class Formularz extends React.Component {
   attach_delete() {
     $('.delete').off();
     $('.delete').click(function () {
-      console.log("click");
+      
       $(this).closest('.form-group').remove();
     });
   }
@@ -368,7 +381,8 @@ class Formularz extends React.Component {
                   id_r += wiersz[0];
               }
               //by uzyskac id klienta z formatu [["ID"]]
-              id_klienta = (id_r.slice(3, -3));
+              id_klienta = (id_r.slice(2, -2));
+              
               //definicja tablicy z listą reklamowanych towarów
               var towary = [];
               // wypelnienie tablicy obiektami(1 obiekt to 1 reklamowany towar)
@@ -384,6 +398,7 @@ class Formularz extends React.Component {
                 // alert(towary[j].ilosc);
               }
               //wysłanie reklamacji	
+              
               fetch("http://localhost/system_reklamacji/php/wyslij_plik.php",{
                         headers:{Accept:"application/json"},
                         method:"POST",
@@ -434,8 +449,6 @@ class Formularz extends React.Component {
       [e.target.name]: e.target.value
     })
   }
-
-  
   render() {
     return (
       
@@ -450,7 +463,6 @@ class Formularz extends React.Component {
           <div className="row">
             <div className="form-group col-md-9">
                   <Hover tekst="Numer Materiału" hint="6 do 8 znaków"></Hover>
-              
               <input type="text" pattern=".{6,8}" title="musi zawierać 6-8 znaków" defaultValue="" className="form-control" id="inputtowar" required placeholder="Numer Materiału" />
             </div>
             <div className="group col-md-2">
@@ -600,6 +612,92 @@ class Formularz extends React.Component {
   }
 }
 //
+class Popup2 extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state={
+      id:this.props.text,
+      dane:[]
+    }
+  }
+
+  KonkretnePliki(e){
+    let pliki=[];
+    e.forEach(element =>{
+      let temp={
+        
+        'nazwa':element[0],
+        'typ':element[1].slice(-4,element[1].length+3).replace('/',''),
+        'sciezka':element[2],
+        
+      };
+      pliki.push(temp);
+    }
+    );
+    //console.log(reklamacje[1].datanabycia);
+    //console.log("---");
+    
+    this.setState({dane:pliki})
+    console.log(this.state.dane)
+  }
+
+  componentDidMount =() =>{
+    
+    fetch("http://localhost/system_reklamacji/php/pobierz_pliki.php",{
+      method:'POST',
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'klucz_nr': this.state.id,
+        
+      })
+    }).then(res=>res.json())
+    .then(json =>this.KonkretnePliki(json))
+
+}
+
+  render()
+  {
+    return(
+      <div className='popup'><h1 className='centruj'>{this.state.id}<button className="zamknij" onClick={this.props.closePopup}>X</button></h1>
+        <div className='popup_inner'>
+        <div className="tg-wrap">
+ 
+{this.state.dane.map((zmapowane)=>{
+  
+  return  <table key={Math.random()+zmapowane.nazwa}  className="tg table table2 table-sm ">
+    <tbody>
+ <tr>
+    <td className="tg-0lax" colSpan="4">
+      {zmapowane.typ==='pdf'?<div className = "App">
+        <a href = {"http://localhost/system_reklamacji/"+zmapowane.nazwa} className="link" target = "_blank" rel="noopener noreferrer">{zmapowane.nazwa}</a>
+      </div>:<ModalImage
+  smallSrcSet="hihi"
+  large={"http://localhost/system_reklamacji/"+zmapowane.nazwa}
+  alt={zmapowane.nazwa}
+/>}
+    
+      
+</td>
+  </tr></tbody>
+</table>
+  }
+
+  
+  )}
+ 
+ </div>
+          
+          
+        </div>
+      </div>
+    );
+  }
+}
+//
 var s;
 class Testuje extends React.Component {
   constructor(props) {
@@ -617,6 +715,7 @@ class Testuje extends React.Component {
     }
     this.handleChangeChk = this.handleChangeChk.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
+    this.togglePliki = this.togglePliki.bind(this);
   }
   
 
@@ -624,11 +723,14 @@ class Testuje extends React.Component {
     if (prevProps.what !== this.props.what) {
       if(this.props.moje)
       {
-        console.log("Cookie:"+Cookies.get("log_auth"));
+        
       }
       
       await this.setState({ strona: this.props.what })
-
+      if(Cookies.get("log_auth"))
+      {
+        
+      
       await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
         .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
           method:'POST',
@@ -643,17 +745,26 @@ class Testuje extends React.Component {
         })
           .then(res => res.json())
           .then(json => this.setState({ status: PokazAll(json) })
-          ))
+          ))}
     }
   }
   togglePopup(e) {
     e.preventDefault();
     this.setState({ showPopup: !this.state.showPopup, current: e.target.id });
+    
+  }
+  togglePliki(e) {
+    
+    e.preventDefault();
+    
+    this.setState({ showPliki: !this.state.showPliki, current: e.target.id });
+    
   }
   
   componentDidMount = async () => {
 
-    
+    if(Cookies.get("log_auth"))
+      {
     await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
       .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
         method:'POST',
@@ -669,7 +780,7 @@ class Testuje extends React.Component {
         .then(res => res.json())
         .then(json => this.setState({ status: PokazAll(json) })
         ))
-
+    }
   }
   handleChangeChk(e) {
     let klucz = e.target.attributes.nrrekla.value;
@@ -697,7 +808,7 @@ class Testuje extends React.Component {
     }
     else {
       buttonval = 'false';
-      console.log(buttonval);
+      
     }
     info.target.attributes.getNamedItem('aria-expanded').value = buttonval;
   }
@@ -726,22 +837,23 @@ class Testuje extends React.Component {
         : null
       }
       {this.state.showPliki ?
-        <Popup
+        <Popup2
           text={this.state.current}
-          closePopup={this.togglePopup.bind(this)}
+          closePopup={this.togglePliki.bind(this)}
         />
         : null
       }
-      <table className='table table-sm table-hover unresponsive'>
+      <div className='wraper'>
+      <table className='table table-sm table-hover  mojetable' cellSpacing="0" width="100%">
         <thead><tr>
-          <th>NR reklamacji</th>
-          <th>Ilość reklamacji</th>
-          <th>Klient</th>
-          <th>Osoba zajmująca się</th>
-          <th>Dokument</th>
-          <th>Nazwa firmy</th>
-          <th>Data</th>
-          <th>Pliki</th>
+          <th><h4>NR reklamacji</h4></th>
+          <th><h4>Ilość reklamacji</h4></th>
+          <th><h4>Klient</h4></th>
+          <th><h4>Osoba zajmująca się</h4></th>
+          <th><h4>Dokument</h4></th>
+          <th><h4>Nazwa firmy</h4></th>
+          <th><h4>Data</h4></th>
+          <th><h4>Pliki</h4></th>
           
           {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php"
             || this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<th key={this.state.reqKey}>Zakończ</th>)}
@@ -749,7 +861,7 @@ class Testuje extends React.Component {
         <tbody>
           {this.state.status.map((dane) =>
             <tr className={dane.numer} key={dane.numer}><td>{dane.numer}</td>
-              <td className="accordion-toggle"><button className='btn btn-info' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
+              <td className="accordion-toggle"><button className='btn btn-warning' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
               <td>{dane.klient}</td>
               <td className='selectpicker'>
                 <select id={dane.numer} onChange={getval.bind(this.value)} className='browser-default customer-select selectpicker'>
@@ -764,13 +876,13 @@ class Testuje extends React.Component {
               <td>{dane.fv}</td>
               <td>{dane.firma}</td>
               <td>{dane.data}</td>
-              <td></td>
+              <td>{dane.pliki===0?'Brak':<button className='btn btn-warning' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
               
               {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-                this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<td><button  nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zakończ</button></td>)}
+                this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<td><button  className='btn btn-danger' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zakończ</button></td>)}
             </tr>
           )}
-        </tbody></table>
+        </tbody></table></div>
     </div>
     )
   }
@@ -788,16 +900,20 @@ class App extends React.Component {
   handleParentData = async (e) => {
     await this.setState({ currenttab: e})
     sessionStorage.setItem('tab',e);
-    console.log(sessionStorage.getItem('tab'));
+    //console.log(sessionStorage.getItem('tab'));
     
   }
-  
+  componentDidMount(){
+    document.title = "System zarządzania reklamacjami"
+    
+    }
   
   render() {
     return (
       <div>
         <AppHeader  handleData={this.handleParentData} />
         {(() => {
+          if(Cookies.get("log_auth") && (Cookies.get("zalogowany"))){
           switch (this.state.currenttab) {
             case "wszystkie":
               return <Testuje  what="http://localhost/system_reklamacji/php/pobierz.php" />
@@ -810,9 +926,9 @@ class App extends React.Component {
             case"moje":
               return <Testuje moje="true" what="http://localhost/system_reklamacji/php/pobierz_moje.php"/>
             default:  
-              return <Formularz />
+              return 
           }
-        })()}
+        }})()}
         <main className="ui main text container">
         </main>
       </div>

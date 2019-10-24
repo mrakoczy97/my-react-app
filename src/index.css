@@ -162,6 +162,7 @@ tr.sztywno{
   
   
 }
+
 .centruj{
   
   
@@ -285,4 +286,115 @@ tr.sztywno{
 .h1-form{
   margin-top:20px;
   color:#5d4f09;
+}
+img {  
+  position: relative;
+}
+
+/* style this to fit your needs */
+/* and remove [alt] to apply to all images*/
+img[alt]:after {  
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: grey;
+  color: #fff3cc;
+  
+  font-family: 'Helvetica';
+  font-weight: 300;
+  line-height: 1.5;  
+  text-align: center;
+  content: attr(alt);
+}
+.link{
+  background-color: grey;
+  color: #fff3cc;
+  padding:5px;
+  
+}
+.link:hover{
+    background-color: grey;
+    color: #fff3cc;
+    text-decoration:none;
+}
+.relat{
+  position:relative;
+}
+.srodek{
+  display:block;
+  position: absolute;
+  margin:0;
+  top:50%;
+  left:50%;
+  
+  z-index: 1;
+  
+  -ms-transform:translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  
+  min-height:50%;
+  text-align: center;
+  background-color: #f5e698;
+  border-radius: 1%;
+  
+  
+  border:10px #8b760e solid;
+}
+.logout{
+  position: absolute;
+  right:0;
+  background:linear-gradient(to bottom, #f0d239 5%, #cca635 100%);
+	background-color:#f0d239;
+	border-bottom-left-radius:12px;
+	border:2px solid #5d4f09;
+	display:inline-block;
+	cursor:pointer;
+	color:#5d4f09;
+	font-family:Arial;
+	
+	
+	text-decoration:none;
+	text-shadow:0px 1px 0px #a83703;
+}
+
+.powitanie{
+  width: auto;
+  padding-left:5px;
+  padding-right:10px;
+  left:0;
+  background:linear-gradient(to bottom, #f0d239 5%, #cca635 100%);
+	background-color:#f0d239;
+	border-bottom-right-radius:12px;
+	border:3px solid #5d4f09;
+	display:inline-block;
+	cursor:pointer;
+	color:#5d4f09;
+	font-family:Arial;
+	
+	
+	text-decoration:none;
+	text-shadow:0px 1px 0px #a83703;
+}
+.mojetable{
+  
+  background-color:#f5e698 ;
+  border:5px #8b760e solid;
+  
+  margin-bottom: 30px;
+  width:100%;
+  table-layout: auto;
+  
+}
+td{
+  border-bottom: 2px #92843b solid;
+  border-left: 1px #92843b solid;
+}
+thead,th{
+  border: 5px #92843b solid;
+}
+.wraper{
+  width: 100% !important;
 }

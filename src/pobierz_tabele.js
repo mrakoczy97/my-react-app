@@ -14,6 +14,7 @@ export function PokazAll(e){
         'firma':element[5],
         'data':element[6],
         'pliki':element[7],
+        'ileplikow':element[8]
         
         
       };
