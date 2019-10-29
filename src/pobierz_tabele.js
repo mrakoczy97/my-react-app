@@ -14,7 +14,8 @@ export function PokazAll(e){
         'firma':element[5],
         'data':element[6],
         'pliki':element[7],
-        'ileplikow':element[8]
+        'datazlozenia':element[8],
+        'datazakonczenia':element[9]
         
         
       };
@@ -39,7 +40,10 @@ export function PokazAll(e){
 }
 
    export function getval(sel){
-  
+     let answer;
+    if(answer=prompt('Chcesz dodać komentarz do zmiany?',''))
+    {}
+    else{answer="Przekazano zgłoszenie dalej";}
     return fetch('http://localhost/system_reklamacji/php/zmien.php',{
        method:'POST',
        headers:{
@@ -49,11 +53,13 @@ export function PokazAll(e){
        body: JSON.stringify({
          'klucz_nr': sel.target.id,
          'klucz_idprac': sel.target.value,
+         'klucz_notatka':answer
        })
      }).then((response) => {
       if (response.ok) {  
         
         alert("Zmieniono osobę pomyślnie");
+        
         return response.json();
       } else {
         throw new Error('Something went wrong');

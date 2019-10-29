@@ -192,11 +192,13 @@ tr.sztywno{
 
   /* Position the tooltip */
   position: absolute;
+  right:20%;
   z-index: 1;
 }
 
 .dohovera:hover .hoveruje {
   visibility: visible;
+
 }
 .fileupdate {
 	background:linear-gradient(to bottom, #f0d239 5%, #cca635 100%);
@@ -397,4 +399,13 @@ thead,th{
 }
 .wraper{
   width: 100% !important;
+}
+.daty{
+  text-align: center;
+}
+.notki{
+  max-width:12%;
+  min-width:12%;
+  width:12%;
+
 }

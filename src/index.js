@@ -151,7 +151,7 @@ class Logowanie extends React.Component{
       }
     }).then(json => json ?  (this.ustawCiasteczka(json),this.props.handlelogged(true),
         sessionStorage.setItem('tab','moje'),window.location.reload()) : null ).catch((error) => {
-     // alert(error);
+      //alert(error);
      alert("Błędne dane! Sprawdź czy dane są poprawne")
     });
      
@@ -462,8 +462,8 @@ class Formularz extends React.Component {
           </div>
           <div className="row">
             <div className="form-group col-md-9">
-                  <Hover tekst="Numer Materiału" hint="6 do 8 znaków"></Hover>
-              <input type="text" pattern=".{6,8}" title="musi zawierać 6-8 znaków" defaultValue="" className="form-control" id="inputtowar" required placeholder="Numer Materiału" />
+                  <Hover tekst="Numer Materiału" hint="6 do 9 znaków"></Hover>
+              <input type="text" pattern=".{6,9}" title="musi zawierać 6-9 znaków" defaultValue="" className="form-control" id="inputtowar" required placeholder="Od 6 do 9 znaków" />
             </div>
             <div className="group col-md-2">
               <label htmlFor="inputPassword4">Ilość</label>
@@ -550,17 +550,15 @@ class Formularz extends React.Component {
             <div className="form-group col-md-12">
               <div className="form-group">
                 <div className="row">
-                  <div className="col-md-12">
-                    <p className=" add-one " onClick={this.DodajTowar}><s className='przycisk'>Dodaj towar do reklamacji</s></p>
-                  </div>
+                  
                   <div className="form-group col-md-12 "><br/>
                     <h5 className="text-center"> Towar #1</h5>
                   </div>
                   <div className="col-md-12 towar1">
                     <div className="form-row">
                       <div className="form-group col-md-10">
-                        <Hover tekst="Numer Materiału" hint="6 do 8 znaków"></Hover>
-                        <input type="text" pattern=".{6,8}" title="musi zawierać 6-8 znaków" className="form-control" id="inputtowar" required placeholder="Numer materiału" />
+                        <Hover tekst="Numer Materiału" hint="6 do 9 znaków"></Hover>
+                        <input type="text" pattern=".{6,9}" title="musi zawierać 6-9 znaków" className="form-control" id="inputtowar" required placeholder="Od 6 do 9 znaków" />
                       </div>
                       <div className="form-group col-md-2">
                         <label htmlFor="inputPassword4">Ilość</label>
@@ -575,13 +573,16 @@ class Formularz extends React.Component {
                     </div>
 
                     
-                  </div></div>
+                  
 
 
               <div className="form-row">
                   <div className="form-group col-md-12">
                     <div className="dynamic-stuff">
                     </div>
+                  </div>
+                  </div></div><div className="col-md-12">
+                    <p className=" add-one " onClick={this.DodajTowar}><s className='przycisk'>Dodaj towar do reklamacji</s></p>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-2">
@@ -639,7 +640,7 @@ class Popup2 extends React.Component{
     //console.log("---");
     
     this.setState({dane:pliki})
-    console.log(this.state.dane)
+    
   }
 
   componentDidMount =() =>{
@@ -698,6 +699,141 @@ class Popup2 extends React.Component{
   }
 }
 //
+class PopupNotatki extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state={
+      id:this.props.text,
+      dane:[],
+      TAvalue:'',
+      
+    }
+    this.handleSendNote=this.handleSendNote.bind(this);
+    
+  }
+TAhandleChange= (e) =>{
+  this.setState({TAvalue:e.target.value});
+}
+  KonkretneNotatki(e){
+    let pliki=[];
+    e.forEach(element =>{
+      let temp={
+        'user':element[0],
+        'notatka':element[1],
+        'data':element[2],
+        'akcja':element[3]
+        
+        
+      };
+      pliki.push(temp);
+    }
+    );
+    //console.log(reklamacje[1].datanabycia);
+    //console.log("---");
+    
+    this.setState({dane:pliki})
+    
+  }
+  handleSendNote(){
+    console.log(this.state.TAvalue);
+    console.log(this.state.id);
+    fetch("http://localhost/system_reklamacji/php/dodaj_uwage.php",{
+      method:'POST',
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'klucz_nr': this.state.id,
+        'klucz_notatka':this.state.TAvalue,
+        
+      })
+    }).then(res=>res.json()).catch(error=>console.log(error));
+    
+    
+
+  }
+  componentDidMount =() =>{
+    
+    fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
+      method:'POST',
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'klucz_nr': this.state.id,
+        
+      })
+    }).then(res=>res.json())
+    .then(json =>this.KonkretneNotatki(json))
+
+}
+componentDidUpdate=()=>{
+
+  fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
+    method:'POST',
+    headers:{
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      'klucz_nr': this.state.id,
+      
+    })
+  }).then(res=>res.json())
+  .then(json =>this.KonkretneNotatki(json))
+
+}
+
+  render()
+  {
+    return(
+      <div className='popup'><h1 className='centruj'>{this.state.id}<button className="zamknij" onClick={this.props.closePopup}>X</button></h1>
+        <div className='popup_inner'>
+        <div className="tg-wrap">
+ 
+{this.state.dane.map((zmapowane)=>{
+  
+  return  <table  className="tg table  table-sm "><tbody><tr>
+  <td className="notki" ><label htmlFor='nazwa'>
+  <Hover tekst="Użytkownik odpowiedzialny:" hint="w danym momencie"></Hover>
+  </label><br/>{zmapowane.user==='wybierz osobę'?<null/>: zmapowane.user}</td>
+     <td className="notki"><label htmlFor='ile'>Akcja:</label><br/>{zmapowane.akcja}</td>
+     <td className=""><label htmlFor='ile'>Notatka:</label><br/>{zmapowane.notatka}</td>
+     
+     <td className="notki"><label htmlFor='dataw'>Data:</label><br/>{zmapowane.data}</td>
+   </tr>
+  </tbody>
+ </table>
+ 
+  }
+
+  
+  )}
+ <table  className="tg table  table-sm "><tbody><tr>
+  
+     
+     
+     <td className="notki"><label htmlFor='dataw'>Wstaw Notatke:</label><br/><textarea value={this.state.TAvalue} onChange={this.TAhandleChange} style={{width:"100%"}}/><button onClick={this.handleSendNote} type='button'>Wyślij notatkę</button></td>
+   </tr>
+  </tbody>
+ </table>
+ </div>
+          
+          
+        </div>
+      </div>
+    );
+  }
+}
+//
+
+
+
+
+//
 var s;
 class Testuje extends React.Component {
   constructor(props) {
@@ -708,14 +844,20 @@ class Testuje extends React.Component {
       puste: false,
       showPopup: false,
       showPliki: false,
+      showUwagi: false,
+      showNotatki: false,
       current: '',
       strona: "",
       reqKey: '',
       Cookies:'',
+      pracownik:'',
     }
     this.handleChangeChk = this.handleChangeChk.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
     this.togglePliki = this.togglePliki.bind(this);
+    this.toggleUwagi = this.toggleUwagi.bind(this);
+    this.toggleNotatki= this.toggleNotatki.bind(this);
+    
   }
   
 
@@ -758,6 +900,22 @@ class Testuje extends React.Component {
     e.preventDefault();
     
     this.setState({ showPliki: !this.state.showPliki, current: e.target.id });
+    
+  }
+
+  toggleUwagi(e) {
+    
+    e.preventDefault();
+    
+    this.setState({ showUwagi: !this.state.showUwagi, current: e.target.id });
+    
+  }
+  
+  toggleNotatki(e) {
+    
+    e.preventDefault();
+    
+    this.setState({ showNotatki: !this.state.showNotatki, current: e.target.id });
     
   }
   
@@ -826,6 +984,15 @@ class Testuje extends React.Component {
    // console.log(wszyscypracownicy);
     this.setState({ pracownicy: wszyscypracownicy })
   }
+jakdlugo(poczatek,koniec){
+
+  const oneDay=24*60*60*1000;
+  let start=new Date(poczatek);
+  let stop = new Date(koniec);
+  let ilosc = Math.ceil(Math.abs(start - stop)/oneDay);
+return ilosc;
+}
+
 
   render() {
     return (<div>
@@ -843,43 +1010,62 @@ class Testuje extends React.Component {
         />
         : null
       }
+     
+      {this.state.showNotatki ?
+        <PopupNotatki
+          text={this.state.current}
+          closePopup={this.toggleNotatki.bind(this)}
+          kto={this.state.pracownik}
+        />
+        : null
+      }
       <div className='wraper'>
-      <table className='table table-sm table-hover  mojetable' cellSpacing="0" width="100%">
+      <table className='table table-sm table-hover  mojetable' cellSpacing="0" width="auto">
         <thead><tr>
-          <th><h4>NR reklamacji</h4></th>
-          <th><h4>Ilość reklamacji</h4></th>
-          <th><h4>Klient</h4></th>
-          <th><h4>Osoba zajmująca się</h4></th>
-          <th><h4>Dokument</h4></th>
-          <th><h4>Nazwa firmy</h4></th>
-          <th><h4>Data</h4></th>
-          <th><h4>Pliki</h4></th>
+          <th>NR reklamacji</th>
+          <th>lość reklamacji</th>
+          <th>Klient</th>
+          <th>Osoba zajmująca się</th>
+          <th>Dokument</th>
+          <th>Nazwa firmy</th>
+          <th>Data Wystąpienia wady</th>
+          <th>Data</th>
+          <th>Pliki</th>
+          {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<th>Czas realizacji</th>:(null)}
+          
           
           {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php"
             || this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<th key={this.state.reqKey}>Zakończ</th>)}
+            {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"?<th>Uwagi</th>:(null)}
         </tr></thead>
         <tbody>
           {this.state.status.map((dane) =>
-            <tr className={dane.numer} key={dane.numer}><td>{dane.numer}</td>
+            <tr className={dane.numer} key={dane.numer}><td style={{fontWeight: "bold"}}>{dane.numer}</td>
               <td className="accordion-toggle"><button className='btn btn-warning' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
               <td>{dane.klient}</td>
-              <td className='selectpicker'>
+              {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td>{dane.lista_prac}</td>:(<td className='selectpicker'>
                 <select id={dane.numer} onChange={getval.bind(this.value)} className='browser-default customer-select selectpicker'>
                   {this.state.pracownicy.map((dane2) => {
-                    if (dane.lista_prac === dane2.dane)
-                      return <option selected key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>
+                    if (dane.lista_prac === dane2.dane){
+                      
+                      return <option selected key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>}
                     return <option key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>
                   }
                   )}
-                </select>
-              </td>
+                </select> 
+              </td>)}
+              
               <td>{dane.fv}</td>
               <td>{dane.firma}</td>
               <td>{dane.data}</td>
-              <td>{dane.pliki===0?'Brak':<button className='btn btn-warning' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
-              
+              <td><p className="daty">Złożenia:<br/><b >{dane.datazlozenia}</b></p>{this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<p className="daty" >Zakończenia:<br/><b style={{color:"red"}}>{dane.datazakonczenia}</b></p>:(null)}</td>
+              <td>{dane.pliki===0?null:<button className='btn btn-warning' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} style={{fontWeight: "bold"}}  aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
+              {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td className='centruj3'>Ilość dni:<br /><h1 style={{color:'green'}}>{this.jakdlugo(dane.datazlozenia,dane.datazakonczenia)}</h1></td>:(null)}
               {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
                 this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<td><button  className='btn btn-danger' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zakończ</button></td>)}
+                {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"?<td><button className='' onClick={this.toggleNotatki} id={dane.numer} type='button'>Uwagi</button></td>:(null)}
             </tr>
           )}
         </tbody></table></div>
