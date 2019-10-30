@@ -57,21 +57,21 @@ class FileUpload extends React.Component{
   }
 
   render(){
-      return(
+      return((
           <div method="POST" className="form-horizontal" id="upload" encType="multipart/form-data"   >
               <br/>    
               <div className="form-row centruj2 ">
                 <div className="form-group col-md-6"> 
                   <input type="file" style={{display:"none"}} onChange={this.handleSubmitFile} multiple name="file" id="image" accept="application/pdf, image/*" /> 
                   <label className="fileupdate" htmlFor="image">Wybierz pliki<h6>Tylko PDF, PNG, JPG/JPEG</h6></label><br/>
-                    <Hover tekst={" Ilość wgranych zdjęć:"+this.state.ile} hint={this.state.lista}/>
+                    <Hover tekst={" Ilość wgranych zdjęć: "+this.state.ile} hint={this.state.lista}/>
                 </div>
                   <div className="form-group col-md-6 ">
                     <button type="button" className="fileupdate" onClick={this.handleRemove}>Usuń pliki z wyboru</button>
                  </div>
             </div>
         </div>
-      )
+      ))
   }
 }
 var data=new FormData();
@@ -94,6 +94,7 @@ class Wylogowanie extends React.Component{
   wyloguj() {
     Cookies.remove('log_auth');
     Cookies.remove("zalogowany");
+    Cookies.remove("acc_perm");
     sessionStorage.setItem('tab','x');
     this.props.handlelogged(false);
     window.location.reload();
@@ -105,7 +106,168 @@ class Wylogowanie extends React.Component{
     )
   }
 }
+class Adminpanel extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      menu1:false,
+      menu2:false,
+      imie:'',
+      nazwisko:'',
+      haslo:'',
+      newhaslo:'',
+      login:''
+    }
+    this.showDodawanie=this.showDodawanie.bind(this);
+    this.showZmianaHasla=this.showZmianaHasla.bind(this);
+    this.handleSubmitLog=this.handleSubmitLog.bind(this);
+    this.handleSubmitPass=this.handleSubmitPass.bind(this);
+  }
+showDodawanie(){
+  console.log(this.state.menu1);
+  this.setState({menu1:!this.state.menu1})
+  
+}
+showZmianaHasla(){
+  console.log(this.state.menu2);
+  this.setState({menu2:!this.state.menu2})
+  
+}
 
+handleChangeLog = (e) => {
+  this.setState({
+    [e.target.name]: e.target.value
+  })
+}
+async handleSubmitLog(e) {
+  e.preventDefault();
+  /*Zdefiniowanie zdarzenia inicjującego 
+ - kliknięcie przycisku wyślij*/
+  //zmienne pobrane z formularza
+  var imie = $('#inputimie').val();
+  var nazwisko = $('#inputnazwisko').val();
+  var haslo = $('#inputhaslo').val();
+  
+   fetch("http://localhost/system_reklamacji/php/dodaj_usera.php", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      'klucz_imie': imie,
+      'klucz_nazwisko':nazwisko,
+      'klucz_haslo': haslo
+
+
+    })
+  }).then((response) => {
+    if (response) {  
+      alert("Dodano pomyślnie");
+      return response.json();
+      
+    } else {
+      throw new Error('Something went wrong');
+    }
+  }).catch((error) => {
+    //alert(error);
+   
+  });
+   this.setState({imie:"",nazwisko:"",haslo:""})
+  // .then(json =>this.zaloguj(json))
+}
+
+//
+async handleSubmitPass(e) {
+  e.preventDefault();
+  /*Zdefiniowanie zdarzenia inicjującego 
+ - kliknięcie przycisku wyślij*/
+  //zmienne pobrane z formularza
+  var login = $('#inputlogin').val();
+  
+  var haslo = $('#inputnowehaslo').val();
+  
+   fetch("http://localhost/system_reklamacji/php/zmien_haslo.php", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      'klucz_login': login,
+      
+      'klucz_haslo': haslo
+
+
+    })
+  }).then((response) => {
+    if (response) {  
+      
+      return response.json();
+      
+    } else {
+      throw new Error('Something went wrong');
+    }
+  }).catch((error) => {
+    //alert(error);
+   
+  });
+  this.setState({login:"",newhaslo:""})
+  // .then(json =>this.zaloguj(json))
+}
+//
+
+  render(){
+    return(
+      <div className="container container-form centruj2">
+          <button className="przycisk" onClick={this.showDodawanie}>Dodaj użytkownika</button><br/><br/>
+          {this.state.menu1?(<div>
+            
+    <form className='relat' onSubmit={this.handleSubmitLog} >
+          <div className='col-md-12'><div className='form-row'  >
+          <div className='form-group col-md-12'><label htmlFor="inputEmail4"><h4> Wypełnij poniższe pola</h4></label>
+              
+            </div>
+
+            <div className='form-group col-md-12'><label htmlFor="inputEmail4">Imie</label>
+              <input type="text" name='imie' value={this.state.imie} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputimie" />
+            </div><div className='form-group col-md-12'><label htmlFor="inputEmail4">Nazwisko</label>
+              <input type="text" name='nazwisko' value={this.state.nazwisko} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputnazwisko" />
+            </div><div className='form-group col-md-12'><label htmlFor="inputEmail4">Hasło</label>
+              <input type="password" name='haslo' value={this.state.haslo} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputhaslo" />
+            </div><div className='form-group col-md-12'>
+            </div><div className='form-group col-md-12'><input id="wyslij" type="submit" value="Dodaj uzytkownika" className="fileupdate" />
+            </div>
+            <label className='form-group col-md-1' ></label>
+          </div></div> </form>
+            </div>):null}
+
+
+          <button className="przycisk"  onClick={this.showZmianaHasla}>Zmień hasło</button><br/><br/>
+          {this.state.menu2?(<div>
+            
+            <form className='relat' onSubmit={this.handleSubmitPass} >
+                  <div className='col-md-12'><div className='form-row'  >
+                  <div className='form-group col-md-12'><label htmlFor="inputEmail4"><h4> Wypełnij poniższe pola</h4></label>
+                      
+                    </div>
+        
+                    <div className='form-group col-md-12'><label htmlFor="inputEmail4">Login</label>
+                      <input type="text" name='login' value={this.state.login} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputlogin" />
+                    </div><div className='form-group col-md-12'><label htmlFor="inputEmail4">Nowe hasło</label>
+                      <input type="password" name='newhaslo' value={this.state.newhaslo} required onChange={e => this.handleChangeLog(e)} className="form-control" id="inputnowehaslo" />
+                    </div><div className='form-group col-md-12'>
+                    </div><div className='form-group col-md-12'><input id="wyslij" type="submit" value="Zmień hasło" className="fileupdate" />
+                    </div>
+                    <label className='form-group col-md-1' ></label>
+                  </div></div> </form>
+                    </div>):null}
+      </div>
+
+
+          )
+  }
+}
 class Logowanie extends React.Component{
   constructor(props){
     super(props);
@@ -139,11 +301,7 @@ class Logowanie extends React.Component{
       })
     }).then((response) => {
       if (response) {  
-        console.log();
-        
-        
-        
-        
+
         return response.json();
         
       } else {
@@ -161,6 +319,11 @@ class Logowanie extends React.Component{
   ustawCiasteczka=(e)=>{
     Cookies.set("log_auth", e[0][0]);
     Cookies.set("zalogowany", e[0][1]);
+    
+    if(e[0][2]){
+      Cookies.set("acc_perm",e[0][1]);
+    }
+    
   }
 
   handleChangeLog = (e) => {
@@ -191,16 +354,7 @@ render(){
 
 }
 
-class AppFooter extends React.Component{
-  
-  render(){
-    return(
-      <div className='wraper'>
-        <div className='footer'></div>
-      </div>
-    )
-  }
-}
+
 
 
 class AppHeader extends React.Component {
@@ -229,20 +383,20 @@ class AppHeader extends React.Component {
   
   
   handleClick = async (e) => {
-    let ifexist;
+    
     this.setState({tab:e.target.attributes.tab.value});
     e.preventDefault();
     
     if (Cookies.get("log_auth") === null ) {
       
-      ifexist = "x";
+      
       await this.props.handleData("formularz");
       
       
     }
     else {
       
-      ifexist = 
+       
       fetch("http://localhost/system_reklamacji/php/check_cookie.php", {
         method: 'POST',
         headers: {
@@ -256,13 +410,33 @@ class AppHeader extends React.Component {
         //alert("nie masz dostępu");
          this.props.handleData("formularz");
          Cookies.remove('log_auth');
+         Cookies.remove("acc_perm");
       });
+      if(Cookies.get('acc_perm')){
+        fetch("http://localhost/system_reklamacji/php/check_permision.php", {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'klucz_cookie': Cookies.get("log_auth"),
+          })
+        }).then(res => res.json()).then(json => (json[0][5] ? "YAY" : "NAY")).catch( (error) => {
+          //alert("nie masz dostępu");
+           this.props.handleData("formularz");
+           Cookies.remove('log_auth');
+           Cookies.remove("acc_perm");
+        });
+
+      }
+      else{
+        Cookies.remove("acc_perm");
+      }
       
       await this.props.handleData(e.target.attributes.tab.value);
       
     }
-    
-    
 
   }
 
@@ -270,7 +444,7 @@ class AppHeader extends React.Component {
 
 handleParentlogged = async (e) => {
       await this.setState({ islogged: e});
-      console.log(this.state.islogged);
+      
     }
 
   render() {
@@ -279,7 +453,7 @@ handleParentlogged = async (e) => {
         <div className="col-md-12 padding-top">
           
   <div className="row"><div className="form-group col-md-6">
-      <img class="logo" title="Ciepło. Wentylacja. Życie." alt="Ciepło. Wentylacja. Życie."
+      <img className="logo" title="Ciepło. Wentylacja. Życie." alt="Ciepło. Wentylacja. Życie."
        src="https://www.schiedel.com/wp-content/custom/schiedel-logo-2019.svg"/>
         </div>
          <div className="form-group col-md-6 ">
@@ -309,10 +483,14 @@ handleParentlogged = async (e) => {
             this.state.tab==='formularz' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="formularz"?"success":"info"
             ))+" btn-block"} tab='formularz' onClick={this.handleClick} href={this.state.tab}>Formularz zgłoszeniowy</a></div>
+        
           <div className='form-group col-md'><a className={"btn shadow-none nakladka btn-"+(
             this.state.tab==='nieprzypisane' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="nieprzypisane"?"success":"info"
-            ))+" btn-block"} tab="nieprzypisane" onClick={this.handleClick} href={this.state.tab}>Reklamacje nieprzypisane</a></div>
+            ))+" btn-block"}
+             tab="nieprzypisane" onClick={this.handleClick} href={this.state.tab}>Reklamacje nieprzypisane</a></div>
+
+
           <div className='form-group col-md'><a className={"btn  shadow-none nakladka btn-"+(
             this.state.tab==='moje' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="moje"?"success":"info"
@@ -325,6 +503,16 @@ handleParentlogged = async (e) => {
             this.state.tab==='zakonczone' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="zakonczone"?"success":"info"
             ))+" btn-block"} tab="zakonczone" onClick={this.handleClick} href={this.state.tab}>Zakończone</a></div>
+          {Cookies.get("acc_perm")?<div className='form-group col-md'><a className={"btn shadow-none nakladka btn-"+(
+            this.state.tab==='panel' && this.state.tab!==''?"success":
+            (this.state.tab==='' && sessionStorage.getItem("tab")==="panel"?"success":"info"
+            ))+" btn-block"}
+             tab="panel" onClick={this.handleClick} href={this.state.tab}>Panel administracyjny</a></div>:null
+        }
+          
+        
+
+
         </div>}
         </div>)}</div></div>
     );
@@ -332,7 +520,7 @@ handleParentlogged = async (e) => {
 }
 //
 //
-let TMP_NR;
+
 class Formularz extends React.Component {
   constructor(props) {
     super(props);
@@ -769,7 +957,7 @@ TAhandleChange= (e) =>{
     
   }
  async handleSendNote(){
-    console.log("oczekiwanie1");
+    
    await setTimeout(() =>  this.setState({refresher:true}), 1000);
     
     
@@ -809,7 +997,7 @@ TAhandleChange= (e) =>{
 }
 componentDidUpdate=()=>{
 if(this.state.refresher){
-  console.log('aa');
+  
 
   fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
     method:'POST',
@@ -991,8 +1179,8 @@ class Testuje extends React.Component {
   handleChangeChk(e) {
     let klucz = e.target.attributes.nrrekla.value;
     let answer;
-        if(answer=prompt('Chcesz dodać komentarz?',''))
-        {}
+        if((answer=prompt('Chcesz dodać komentarz?','')))
+        {    }
         else{answer="Zamknięto zgłoszenie";}
     fetch("http://localhost/system_reklamacji/php/zamknij_zgloszenie.php", {
       method: 'POST',
@@ -1206,7 +1394,12 @@ class App extends React.Component {
               return <Testuje what="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" />
             case"moje":
               return <Testuje moje="true" what="http://localhost/system_reklamacji/php/pobierz_moje.php"/>
+            case "panel":
+              if(Cookies.get('acc_perm')){return <Adminpanel/>}
+              else return 
+              
             default:  
+            
               return 
           }
         }})()}
