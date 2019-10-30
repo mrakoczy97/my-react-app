@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Cookies from 'js-cookie';
-import { getval, PokazAll, ReklamacjaIndy } from './pobierz_tabele.js';
+import { getval,getkryterium, PokazAll, ReklamacjaIndy } from './pobierz_tabele.js';
 import * as serviceWorker from './serviceWorker';
 import $ from 'jquery';
 import Popup from './functions.js';
@@ -191,7 +191,16 @@ render(){
 
 }
 
-
+class AppFooter extends React.Component{
+  
+  render(){
+    return(
+      <div className='wraper'>
+        <div className='footer'></div>
+      </div>
+    )
+  }
+}
 
 
 class AppHeader extends React.Component {
@@ -266,34 +275,58 @@ handleParentlogged = async (e) => {
 
   render() {
     return (
-      <div className='row'> {(!Cookies.get("log_auth") && !Cookies.get("zalogowany") && (this.state.zalogowany)!==null?<Logowanie   handlelogged={this.handleParentlogged}/>:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
+      <div>
+        <div className="col-md-12 padding-top">
+          
+  <div className="row"><div className="form-group col-md-6">
+      <img class="logo" title="Ciepło. Wentylacja. Życie." alt="Ciepło. Wentylacja. Życie."
+       src="https://www.schiedel.com/wp-content/custom/schiedel-logo-2019.svg"/>
+        </div>
+         <div className="form-group col-md-6 ">
+         <div className="row wprawo " >
+         <div className="col-md-12">
+         <div className="form-group col-md-12">
+            {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:<h1 >Witaj {Cookies.get("zalogowany")}
+         </h1>)}<hr className="hrstyle"/>
+         
+            {(!Cookies.get("log_auth") && !Cookies.get("zalogowany") && (this.state.zalogowany)!==null?null:<Wylogowanie handlelogged={this.handleParentlogged}/>)}
+          </div> 
+         </div>
+          </div></div>
+          
+
+        </div>
+      
+
+      </div>
+      <div className='row'> 
         
-       {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:<h2 className="powitanie" style={{marginLeft:'0.8%'}}>Witaj {Cookies.get("zalogowany")}</h2>)}
+      {(!Cookies.get("log_auth") && !Cookies.get("zalogowany") && (this.state.zalogowany)!==null?<Logowanie   handlelogged={this.handleParentlogged}/>:null)}
         {(!Cookies.get("log_auth") && (this.state.zalogowany)!==null?null:
         <div className='col-md-12'>
           {(Cookies.get("log_auth") === null)?null:<div className='form-row' >
-          <div className='form-group col-md-3'><a className={"btn btn-"+(
+          <div className='form-group col-md-3'><a className={"btn shadow-none nakladka btn-"+(
             this.state.tab==='formularz' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="formularz"?"success":"info"
             ))+" btn-block"} tab='formularz' onClick={this.handleClick} href={this.state.tab}>Formularz zgłoszeniowy</a></div>
-          <div className='form-group col-md'><a className={"btn btn-"+(
+          <div className='form-group col-md'><a className={"btn shadow-none nakladka btn-"+(
             this.state.tab==='nieprzypisane' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="nieprzypisane"?"success":"info"
             ))+" btn-block"} tab="nieprzypisane" onClick={this.handleClick} href={this.state.tab}>Reklamacje nieprzypisane</a></div>
-          <div className='form-group col-md'><a className={"btn btn-"+(
+          <div className='form-group col-md'><a className={"btn  shadow-none nakladka btn-"+(
             this.state.tab==='moje' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="moje"?"success":"info"
             ))+" btn-block"} tab="moje" onClick={this.handleClick} href={this.state.tab}>Moje reklamacje</a></div>
-          <div className='form-group col-md'><a className={"btn btn-"+(
+          <div className='form-group col-md'><a className={"btn  shadow-none nakladka btn-"+(
             this.state.tab==='wszystkie' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="wszystkie"?"success":"info"
             ))+" btn-block"} tab="wszystkie" onClick={this.handleClick} href={this.state.tab}>Wszystkie reklamacje</a></div>
-          <div className='form-group col-md'><a className={"btn btn-"+(
+          <div className='form-group col-md'><a className={"btn  shadow-none nakladka btn-"+(
             this.state.tab==='zakonczone' && this.state.tab!==''?"success":
             (this.state.tab==='' && sessionStorage.getItem("tab")==="zakonczone"?"success":"info"
             ))+" btn-block"} tab="zakonczone" onClick={this.handleClick} href={this.state.tab}>Zakończone</a></div>
         </div>}
-        </div>)}</div>
+        </div>)}</div></div>
     );
   }
 }
@@ -707,7 +740,7 @@ class PopupNotatki extends React.Component{
       id:this.props.text,
       dane:[],
       TAvalue:'',
-      
+      refresher:false,
     }
     this.handleSendNote=this.handleSendNote.bind(this);
     
@@ -735,9 +768,11 @@ TAhandleChange= (e) =>{
     this.setState({dane:pliki})
     
   }
-  handleSendNote(){
-    console.log(this.state.TAvalue);
-    console.log(this.state.id);
+ async handleSendNote(){
+    console.log("oczekiwanie1");
+   await setTimeout(() =>  this.setState({refresher:true}), 1000);
+    
+    
     fetch("http://localhost/system_reklamacji/php/dodaj_uwage.php",{
       method:'POST',
       headers:{
@@ -749,7 +784,9 @@ TAhandleChange= (e) =>{
         'klucz_notatka':this.state.TAvalue,
         
       })
-    }).then(res=>res.json()).catch(error=>console.log(error));
+    }).then(res=>res.json()).catch(error=>console.log(error)).then(setTimeout(() =>  this.setState({refresher:!this.state.refresher}), 1030))
+    .then(this.setState({TAvalue:""}));
+    
     
     
 
@@ -771,6 +808,8 @@ TAhandleChange= (e) =>{
 
 }
 componentDidUpdate=()=>{
+if(this.state.refresher){
+  console.log('aa');
 
   fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
     method:'POST',
@@ -784,7 +823,7 @@ componentDidUpdate=()=>{
     })
   }).then(res=>res.json())
   .then(json =>this.KonkretneNotatki(json))
-
+}
 }
 
   render()
@@ -801,7 +840,7 @@ componentDidUpdate=()=>{
   <Hover tekst="Użytkownik odpowiedzialny:" hint="w danym momencie"></Hover>
   </label><br/>{zmapowane.user==='wybierz osobę'?<null/>: zmapowane.user}</td>
      <td className="notki"><label htmlFor='ile'>Akcja:</label><br/>{zmapowane.akcja}</td>
-     <td className=""><label htmlFor='ile'>Notatka:</label><br/>{zmapowane.notatka}</td>
+     <td className="notki"><label htmlFor='ile'>Notatka:</label><br/>{zmapowane.notatka}</td>
      
      <td className="notki"><label htmlFor='dataw'>Data:</label><br/>{zmapowane.data}</td>
    </tr>
@@ -841,6 +880,7 @@ class Testuje extends React.Component {
     this.state = {
       status: [],
       pracownicy: [],
+      kryteria:[],
       puste: false,
       showPopup: false,
       showPliki: false,
@@ -871,10 +911,15 @@ class Testuje extends React.Component {
       await this.setState({ strona: this.props.what })
       if(Cookies.get("log_auth"))
       {
-        
+       await fetch("http://localhost/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
+        .then(json => this.PrzypiszKryteria(json));
       
       await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
-        .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
+        .then(json => this.PrzypiszPracownikow(json))
+        
+        
+        
+        .then(fetch(this.props.what,{
           method:'POST',
           headers:{
             'Accept': 'application/json',
@@ -923,6 +968,9 @@ class Testuje extends React.Component {
 
     if(Cookies.get("log_auth"))
       {
+        await fetch("http://localhost/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
+        .then(json => this.PrzypiszKryteria(json));
+
     await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
       .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
         method:'POST',
@@ -942,6 +990,10 @@ class Testuje extends React.Component {
   }
   handleChangeChk(e) {
     let klucz = e.target.attributes.nrrekla.value;
+    let answer;
+        if(answer=prompt('Chcesz dodać komentarz?',''))
+        {}
+        else{answer="Zamknięto zgłoszenie";}
     fetch("http://localhost/system_reklamacji/php/zamknij_zgloszenie.php", {
       method: 'POST',
       headers: {
@@ -950,6 +1002,7 @@ class Testuje extends React.Component {
       },
       body: JSON.stringify({
         'klucz_nr': klucz,
+        'klucz_notatka':answer
       })
     }).then(res => res.json())
       .then(this.forceUpdate()).then(window.location.reload());
@@ -984,6 +1037,23 @@ class Testuje extends React.Component {
    // console.log(wszyscypracownicy);
     this.setState({ pracownicy: wszyscypracownicy })
   }
+
+  PrzypiszKryteria(e) {
+    let wszystkiekryteria = [];
+    e.forEach(element => {
+      let temp = {
+        'id': element[0],
+        'nazwa': element[1]
+      };
+      wszystkiekryteria.push(temp);
+    }
+    );
+   // console.log(wszyscypracownicy);
+    this.setState({ kryteria: wszystkiekryteria });
+    
+  }
+
+
 jakdlugo(poczatek,koniec){
 
   const oneDay=24*60*60*1000;
@@ -1025,6 +1095,7 @@ return ilosc;
           <th>NR reklamacji</th>
           <th>lość reklamacji</th>
           <th>Klient</th>
+          {this.props.what!=="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php"?<th>Kryterium</th>:(null)}
           <th>Osoba zajmująca się</th>
           <th>Dokument</th>
           <th>Nazwa firmy</th>
@@ -1034,38 +1105,62 @@ return ilosc;
           {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<th>Czas realizacji</th>:(null)}
           
           
-          {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php"
-            || this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<th key={this.state.reqKey}>Zakończ</th>)}
+          {this.props.what !== "http://localhost/system_reklamacji/php/pobierz_moje.php"?
+             (null) : (<th key={this.state.reqKey}>Zakończ</th>)}
             {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"?<th>Uwagi</th>:(null)}
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"
+          |
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz.php"?<th>Uwagi</th>:(null)}
         </tr></thead>
         <tbody>
           {this.state.status.map((dane) =>
             <tr className={dane.numer} key={dane.numer}><td style={{fontWeight: "bold"}}>{dane.numer}</td>
-              <td className="accordion-toggle"><button className='btn btn-warning' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
+            
+              <td className="accordion-toggle"><button className='przycisk' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
               <td>{dane.klient}</td>
-              {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td>{dane.lista_prac}</td>:(<td className='selectpicker'>
-                <select id={dane.numer} onChange={getval.bind(this.value)} className='browser-default customer-select selectpicker'>
-                  {this.state.pracownicy.map((dane2) => {
-                    if (dane.lista_prac === dane2.dane){
-                      
-                      return <option selected key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>}
-                    return <option key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>
+          {this.props.what!=="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php"?(this.props.what!=="http://localhost/system_reklamacji/php/pobierz_moje.php"?<td>{dane.kryterium==="wybierz kryterium"?null:dane.kryterium}</td>:
+                (<td className='selectpicker'>
+                    <select id={dane.numer} onChange={getkryterium.bind(this.value)} className='browser-default customer-select selectpicker'>
+                                {this.state.kryteria.map((dane3) => {
+                                  
+                                      if(dane.kryterium===dane3.nazwa){
+                                        return <option selected key={dane3.id} id={dane.numer + " " + dane3.dane} value={dane3.id}>{dane3.nazwa}</option>
+                                      }
+                                        return <option  key={dane3.id} id={dane.numer + " " + dane3.dane} value={dane3.id}>{dane3.nazwa}</option>}
+                                 
+                                
+                                )}
+
+                    </select>
+                </td>)
+              
+              ):(null)}
+
+        {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td>{dane.lista_prac}</td>:
+              (<td className='selectpicker'>
+                   <select id={dane.numer} onChange={getval.bind(this.value)} className='browser-default customer-select selectpicker'>
+                        {this.state.pracownicy.map((dane2) => {
+                          if (dane.lista_prac === dane2.dane){
+                                 return <option selected key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>}
+                          return <option key={dane2.id} id={dane.numer + " " + dane2.dane} value={dane2.id}>{dane2.dane}</option>
                   }
                   )}
-                </select> 
+                  </select> 
               </td>)}
+
+
               
               <td>{dane.fv}</td>
               <td>{dane.firma}</td>
               <td>{dane.data}</td>
               <td><p className="daty">Złożenia:<br/><b >{dane.datazlozenia}</b></p>{this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<p className="daty" >Zakończenia:<br/><b style={{color:"red"}}>{dane.datazakonczenia}</b></p>:(null)}</td>
-              <td>{dane.pliki===0?null:<button className='btn btn-warning' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} style={{fontWeight: "bold"}}  aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
+              <td>{dane.pliki===0?null:<button className='przycisk' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} style={{fontWeight: "bold"}}  aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
               {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td className='centruj3'>Ilość dni:<br /><h1 style={{color:'green'}}>{this.jakdlugo(dane.datazlozenia,dane.datazakonczenia)}</h1></td>:(null)}
-              {this.props.what === "http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-                this.props.what === "http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" ? (null) : (<td><button  className='btn btn-danger' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zakończ</button></td>)}
+              {this.props.what !== "http://localhost/system_reklamacji/php/pobierz_moje.php"  ? (null) : (<td style={{height:"100%"}}><button  className='zakoncz' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zamknij zgłoszenie</button></td>)}
                 {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"?<td><button className='' onClick={this.toggleNotatki} id={dane.numer} type='button'>Uwagi</button></td>:(null)}
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"
+          |
+          this.props.what==="http://localhost/system_reklamacji/php/pobierz.php"?<td><button className='przycisk' onClick={this.toggleNotatki} id={dane.numer} type='button'>Uwagi</button></td>:(null)}
             </tr>
           )}
         </tbody></table></div>
@@ -1115,7 +1210,9 @@ class App extends React.Component {
               return 
           }
         }})()}
+        
         <main className="ui main text container">
+          
         </main>
       </div>
     );
@@ -1123,6 +1220,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById("app"));
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
