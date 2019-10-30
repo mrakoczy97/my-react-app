@@ -13,7 +13,11 @@ export function PokazAll(e){
         'fv':element[4],
         'firma':element[5],
         'data':element[6],
-        'kierowca':element[7]
+        'pliki':element[7],
+        'datazlozenia':element[8],
+        'datazakonczenia':element[9],
+        'kryterium':element[10],
+        
         
       };
       tabela.push(temp);
@@ -37,7 +41,10 @@ export function PokazAll(e){
 }
 
    export function getval(sel){
-  
+     let answer;
+    if(answer=prompt('Chcesz dodać komentarz do zmiany?',''))
+    {}
+    else{answer="Przekazano zgłoszenie dalej";}
     return fetch('http://localhost/system_reklamacji/php/zmien.php',{
        method:'POST',
        headers:{
@@ -47,9 +54,47 @@ export function PokazAll(e){
        body: JSON.stringify({
          'klucz_nr': sel.target.id,
          'klucz_idprac': sel.target.value,
+         'klucz_notatka':answer
        })
-     }).then(msg=> msg.json()).then(res=>console.log(res))
+     }).then((response) => {
+      if (response.ok) {  
+        
+        alert("Zmieniono osobę pomyślnie");
+        
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    });
+     
     
+ }
+ export function getkryterium(sel){
+  let answer;
+  if(answer=prompt('Chcesz dodać komentarz do zmiany?',''))
+  {}
+  else{answer="Przekazano zgłoszenie dalej";}
+  return fetch('http://localhost/system_reklamacji/php/zmienkryterium.php',{
+     method:'POST',
+     headers:{
+       'Accept': 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       'klucz_nr': sel.target.id,
+       'klucz_kryterium': sel.target.value,
+       'klucz_notatka':answer
+     })
+   }).then((response) => {
+    if (response.ok) {  
+      
+      alert("Zmieniono kryterium pomyślnie");
+      
+      return response.json();
+    } else {
+      throw new Error('Something went wrong');
+    }
+  });
  }
 
  export function ReklamacjaIndy(dane){

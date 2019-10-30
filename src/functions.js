@@ -14,11 +14,11 @@ class Popup extends React.Component{
     let reklamacje=[];
     e.forEach(element =>{
       let temp={
-        'datanabycia':element[0],
-        'nazwa':element[1],
-        'ilosc':element[2],
-        'przyczyna':element[3],
-        'datawady':element[4]
+        
+        'nazwa':element[0],
+        'ilosc':element[1],
+        'przyczyna':element[2],
+        'datawady':element[3]
       };
       reklamacje.push(temp);
     }
@@ -31,6 +31,7 @@ class Popup extends React.Component{
   }
 
   componentDidMount =() =>{
+    
     fetch("http://localhost/system_reklamacji/php/pobierz_konkretny.php",{
       method:'POST',
       headers:{
@@ -63,7 +64,7 @@ class Popup extends React.Component{
   return  <table  className="tg table table2 table-sm "><tbody><tr>
  <td className="tg-0pky" ><label htmlFor='nazwa'>Nazwa:</label><br/>{zmapowane.nazwa}</td>
     <td className="tg-0lax"><label htmlFor='ile'>Ilość:</label><br/>{zmapowane.ilosc}</td>
-    <td className="tg-0lax"><label htmlFor='datan'>Data nabycia:</label><br/>{zmapowane.datanabycia}</td>
+    
     <td className="tg-0lax"><label htmlFor='dataw'>Data wystąpienia wady:</label><br/>{zmapowane.datawady}</td>
   </tr>
  <tr>
@@ -86,4 +87,6 @@ class Popup extends React.Component{
     );
   }
 }
+
+ 
 export default Popup;

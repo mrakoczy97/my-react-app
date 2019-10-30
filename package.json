@@ -2,13 +2,14 @@
   "name": "my-react-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mrakoczy97.github.io/complaintssystem",
+  "homepage": ".",
   "dependencies": {
     "@types/jest": "^24.0.18",
     "@types/js-cookie": "^2.2.3",
     "@types/node": "^12.7.11",
     "@types/react": "^16.9.5",
     "@types/react-dom": "^16.9.1",
+    "create-react-app": "^3.2.0",
     "fast-deep-equal": "^2.0.1",
     "gh-pages": "^2.1.1",
     "history": "^4.10.1",
@@ -17,6 +18,8 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-gravatar": "^2.6.3",
+    "react-icons": "^3.7.0",
+    "react-modal-image": "^2.5.0",
     "react-native-md5": "^1.0.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
@@ -24,7 +27,6 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
-    
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
