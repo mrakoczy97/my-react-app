@@ -148,7 +148,7 @@ async handleSubmitLog(e) {
   var nazwisko = $('#inputnazwisko').val();
   var haslo = $('#inputhaslo').val();
   
-   fetch("http://localhost/system_reklamacji/php/dodaj_usera.php", {
+   fetch("http://10.44.50.28/system_reklamacji/php/dodaj_usera.php", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -187,7 +187,7 @@ async handleSubmitPass(e) {
   
   var haslo = $('#inputnowehaslo').val();
   
-   fetch("http://localhost/system_reklamacji/php/zmien_haslo.php", {
+   fetch("http://10.44.50.28/system_reklamacji/php/zmien_haslo.php", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -288,7 +288,7 @@ class Logowanie extends React.Component{
     var imie = $('#inputlogin').val();
     var haslo = $('#inputhaslo').val();
     this.setState({kto:imie});
-     fetch("http://localhost/system_reklamacji/php/zaloguj.php", {
+     fetch("http://10.44.50.28/system_reklamacji/php/zaloguj.php", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -397,7 +397,7 @@ class AppHeader extends React.Component {
     else {
       
        
-      fetch("http://localhost/system_reklamacji/php/check_cookie.php", {
+      fetch("http://10.44.50.28/system_reklamacji/php/check_cookie.php", {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -413,7 +413,7 @@ class AppHeader extends React.Component {
          Cookies.remove("acc_perm");
       });
       if(Cookies.get('acc_perm')){
-        fetch("http://localhost/system_reklamacji/php/check_permision.php", {
+        fetch("http://10.44.50.28/system_reklamacji/php/check_permision.php", {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -582,7 +582,7 @@ class Formularz extends React.Component {
       //dodanie klienta do bazy	
       $.ajax({
         type: "POST", /*Informacja o tym, że dane będą wysyłane*/
-        url: "http://localhost/system_reklamacji/php/wyslij_klienta.php", /*Informacja, o tym jaki plik będzie przy tym wykorzystywany*/
+        url: "http://10.44.50.28/system_reklamacji/php/wyslij_klienta.php", /*Informacja, o tym jaki plik będzie przy tym wykorzystywany*/
         dataType: 'text',
         data: { klucz_imie: imie, klucz_nazwisko: nazwisko, klucz_email: email, klucz_telefon: telefon, klucz_firma: firma, }, /*Zdefiniowanie jakie dane będą wysyłane na zasadzie 
               pary klucz-wartość np: wartosc_z_listy_ajax=Polska*/
@@ -592,7 +592,7 @@ class Formularz extends React.Component {
           //pobranie id klienta
           $.ajax({
             type: "POST", /*Informacja o tym, że dane będą pobierane*/
-            url: "http://localhost/system_reklamacji/php/pobierz_uzytkownika.php", /*Informacja, o tym jaki plik będzie przy tym wykorzystywany*/
+            url: "http://10.44.50.28/system_reklamacji/php/pobierz_uzytkownika.php", /*Informacja, o tym jaki plik będzie przy tym wykorzystywany*/
             dataType: 'text', /*Informacja o formacie transferu danych*/
             data: { klucz_imie: imie, klucz_nazwisko: nazwisko },
             /*Działania wykonywane w przypadku sukcesu*/
@@ -620,14 +620,14 @@ class Formularz extends React.Component {
               }
               //wysłanie reklamacji	
               
-              fetch("http://localhost/system_reklamacji/php/wyslij_plik.php",{
+              fetch("http://10.44.50.28/system_reklamacji/php/wyslij_plik.php",{
                         headers:{Accept:"application/json"},
                         method:"POST",
                         body:data,
                     }).then(res=>res.json())
                     .then(json=> $.ajax({
                         type: "POST",
-                        url: "http://localhost/system_reklamacji/php/wyslij_reklamacje_trans.php",
+                        url: "http://10.44.50.28/system_reklamacji/php/wyslij_reklamacje_trans.php",
                         dataType: 'html',
                         data: {
                           klucz_imie: imie, klucz_nazwisko: nazwisko,klucz_nrrekalamcji:json, klucz_dokument: dokument, klucz_datan: datan, klucz_dataw: dataw,
@@ -866,7 +866,7 @@ class Popup2 extends React.Component{
 
   componentDidMount =() =>{
     
-    fetch("http://localhost/system_reklamacji/php/pobierz_pliki.php",{
+    fetch("http://10.44.50.28/system_reklamacji/php/pobierz_pliki.php",{
       method:'POST',
       headers:{
         'Accept': 'application/json',
@@ -895,10 +895,10 @@ class Popup2 extends React.Component{
  <tr>
     <td className="tg-0lax" colSpan="4">
       {zmapowane.typ==='pdf'?<div className = "App">
-        <a href = {"http://localhost/system_reklamacji/"+zmapowane.nazwa} className="link" target = "_blank" rel="noopener noreferrer">{zmapowane.nazwa}</a>
+        <a href = {"http://10.44.50.28/system_reklamacji/"+zmapowane.nazwa} className="link" target = "_blank" rel="noopener noreferrer">{zmapowane.nazwa}</a>
       </div>:<ModalImage
   smallSrcSet="hihi"
-  large={"http://localhost/system_reklamacji/"+zmapowane.nazwa}
+  large={"http://10.44.50.28/system_reklamacji/"+zmapowane.nazwa}
   alt={zmapowane.nazwa}
 />}
     
@@ -961,7 +961,7 @@ TAhandleChange= (e) =>{
    await setTimeout(() =>  this.setState({refresher:true}), 1000);
     
     
-    fetch("http://localhost/system_reklamacji/php/dodaj_uwage.php",{
+    fetch("http://10.44.50.28/system_reklamacji/php/dodaj_uwage.php",{
       method:'POST',
       headers:{
         'Accept': 'application/json',
@@ -981,7 +981,7 @@ TAhandleChange= (e) =>{
   }
   componentDidMount =() =>{
     
-    fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
+    fetch("http://10.44.50.28/system_reklamacji/php/pobierz_notatki.php",{
       method:'POST',
       headers:{
         'Accept': 'application/json',
@@ -999,7 +999,7 @@ componentDidUpdate=()=>{
 if(this.state.refresher){
   
 
-  fetch("http://localhost/system_reklamacji/php/pobierz_notatki.php",{
+  fetch("http://10.44.50.28/system_reklamacji/php/pobierz_notatki.php",{
     method:'POST',
     headers:{
       'Accept': 'application/json',
@@ -1099,10 +1099,10 @@ class Testuje extends React.Component {
       await this.setState({ strona: this.props.what })
       if(Cookies.get("log_auth"))
       {
-       await fetch("http://localhost/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
+       await fetch("http://10.44.50.28/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
         .then(json => this.PrzypiszKryteria(json));
       
-      await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
+      await fetch("http://10.44.50.28/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
         .then(json => this.PrzypiszPracownikow(json))
         
         
@@ -1156,10 +1156,10 @@ class Testuje extends React.Component {
 
     if(Cookies.get("log_auth"))
       {
-        await fetch("http://localhost/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
+        await fetch("http://10.44.50.28/system_reklamacji/php/pobierz_kryteria.php").then(res => res.json())
         .then(json => this.PrzypiszKryteria(json));
 
-    await fetch("http://localhost/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
+    await fetch("http://10.44.50.28/system_reklamacji/php/pobierz_pracownikow.php").then(res => res.json())
       .then(json => this.PrzypiszPracownikow(json)).then(fetch(this.props.what,{
         method:'POST',
         headers:{
@@ -1182,7 +1182,7 @@ class Testuje extends React.Component {
         if((answer=prompt('Chcesz dodać komentarz?','')))
         {    }
         else{answer="Zamknięto zgłoszenie";}
-    fetch("http://localhost/system_reklamacji/php/zamknij_zgloszenie.php", {
+    fetch("http://10.44.50.28/system_reklamacji/php/zamknij_zgloszenie.php", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -1283,22 +1283,22 @@ return ilosc;
           <th>NR reklamacji</th>
           <th>lość reklamacji</th>
           <th>Klient</th>
-          {this.props.what!=="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php"?<th>Kryterium</th>:(null)}
+          {this.props.what!=="http://10.44.50.28/system_reklamacji/php/pobierz_nieprzypisane.php"?<th>Kryterium</th>:(null)}
           <th>Osoba zajmująca się</th>
           <th>Dokument</th>
           <th>Nazwa firmy</th>
           <th>Data Wystąpienia wady</th>
           <th>Data</th>
           <th>Pliki</th>
-          {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<th>Czas realizacji</th>:(null)}
+          {this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php"?<th>Czas realizacji</th>:(null)}
           
           
-          {this.props.what !== "http://localhost/system_reklamacji/php/pobierz_moje.php"?
+          {this.props.what !== "http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"?
              (null) : (<th key={this.state.reqKey}>Zakończ</th>)}
-            {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"
+            {this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php" ||
+          this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"
           |
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz.php"?<th>Uwagi</th>:(null)}
+          this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz.php"?<th>Uwagi</th>:(null)}
         </tr></thead>
         <tbody>
           {this.state.status.map((dane) =>
@@ -1306,7 +1306,7 @@ return ilosc;
             
               <td className="accordion-toggle"><button className='przycisk' onClick={this.togglePopup} type='button' data-toggle='collapse' data-target={'#collapse' + dane.numer} aria-expanded='false' id={dane.numer} aria-controls={'#collapse' + dane.numer}>{dane.ile}</button></td>
               <td>{dane.klient}</td>
-          {this.props.what!=="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php"?(this.props.what!=="http://localhost/system_reklamacji/php/pobierz_moje.php"?<td>{dane.kryterium==="wybierz kryterium"?null:dane.kryterium}</td>:
+          {this.props.what!=="http://10.44.50.28/system_reklamacji/php/pobierz_nieprzypisane.php"?(this.props.what!=="http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"?<td>{dane.kryterium==="wybierz kryterium"?null:dane.kryterium}</td>:
                 (<td className='selectpicker'>
                     <select id={dane.numer} onChange={getkryterium.bind(this.value)} className='browser-default customer-select selectpicker'>
                                 {this.state.kryteria.map((dane3) => {
@@ -1324,7 +1324,7 @@ return ilosc;
               
               ):(null)}
 
-        {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td>{dane.lista_prac}</td>:
+        {this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php"?<td>{dane.lista_prac}</td>:
               (<td className='selectpicker'>
                    <select id={dane.numer} onChange={getval.bind(this.value)} className='browser-default customer-select selectpicker'>
                         {this.state.pracownicy.map((dane2) => {
@@ -1341,14 +1341,14 @@ return ilosc;
               <td>{dane.fv}</td>
               <td>{dane.firma}</td>
               <td>{dane.data}</td>
-              <td><p className="daty">Złożenia:<br/><b >{dane.datazlozenia}</b></p>{this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<p className="daty" >Zakończenia:<br/><b style={{color:"red"}}>{dane.datazakonczenia}</b></p>:(null)}</td>
+              <td><p className="daty">Złożenia:<br/><b >{dane.datazlozenia}</b></p>{this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php"?<p className="daty" >Zakończenia:<br/><b style={{color:"red"}}>{dane.datazakonczenia}</b></p>:(null)}</td>
               <td>{dane.pliki===0?null:<button className='przycisk' onClick={this.togglePliki} type='button' data-toggle='collapse2' data-target={'#collapse2' +dane.numer} aria-expanded='false' id={dane.numer} style={{fontWeight: "bold"}}  aria-controls={'#collapse2' + dane.numer}>Pliki ({dane.pliki})</button>}</td>
-              {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php"?<td className='centruj3'>Ilość dni:<br /><h1 style={{color:'green'}}>{this.jakdlugo(dane.datazlozenia,dane.datazakonczenia)}</h1></td>:(null)}
-              {this.props.what !== "http://localhost/system_reklamacji/php/pobierz_moje.php"  ? (null) : (<td style={{height:"100%"}}><button  className='zakoncz' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zamknij zgłoszenie</button></td>)}
-                {this.props.what==="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" ||
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz_moje.php"
+              {this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php"?<td className='centruj3'>Ilość dni:<br /><h1 style={{color:'green'}}>{this.jakdlugo(dane.datazlozenia,dane.datazakonczenia)}</h1></td>:(null)}
+              {this.props.what !== "http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"  ? (null) : (<td style={{height:"100%"}}><button  className='zakoncz' nrrekla={dane.numer} onClick={this.handleChangeChk} type="checkbox" >Zamknij zgłoszenie</button></td>)}
+                {this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php" ||
+          this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"
           |
-          this.props.what==="http://localhost/system_reklamacji/php/pobierz.php"?<td><button className='przycisk' onClick={this.toggleNotatki} id={dane.numer} type='button'>Uwagi</button></td>:(null)}
+          this.props.what==="http://10.44.50.28/system_reklamacji/php/pobierz.php"?<td><button className='przycisk' onClick={this.toggleNotatki} id={dane.numer} type='button'>Uwagi</button></td>:(null)}
             </tr>
           )}
         </tbody></table></div>
@@ -1385,15 +1385,15 @@ class App extends React.Component {
           if(Cookies.get("log_auth") && (Cookies.get("zalogowany"))){
           switch (this.state.currenttab) {
             case "wszystkie":
-              return <Testuje  what="http://localhost/system_reklamacji/php/pobierz.php" />
+              return <Testuje  what="http://10.44.50.28/system_reklamacji/php/pobierz.php" />
             case "formularz":
               return <Formularz />
             case "nieprzypisane":
-              return <Testuje what="http://localhost/system_reklamacji/php/pobierz_nieprzypisane.php" />
+              return <Testuje what="http://10.44.50.28/system_reklamacji/php/pobierz_nieprzypisane.php" />
             case "zakonczone":
-              return <Testuje what="http://localhost/system_reklamacji/php/pobierz_zakonczone.php" />
+              return <Testuje what="http://10.44.50.28/system_reklamacji/php/pobierz_zakonczone.php" />
             case"moje":
-              return <Testuje moje="true" what="http://localhost/system_reklamacji/php/pobierz_moje.php"/>
+              return <Testuje moje="true" what="http://10.44.50.28/system_reklamacji/php/pobierz_moje.php"/>
             case "panel":
               if(Cookies.get('acc_perm')){return <Adminpanel/>}
               else return 
