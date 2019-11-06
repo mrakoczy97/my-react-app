@@ -45,7 +45,7 @@ export function PokazAll(e){
     if(answer=prompt('Chcesz dodać komentarz do zmiany?',''))
     {}
     else{answer="Przekazano zgłoszenie dalej";}
-    return fetch('http://10.44.50.28/system_reklamacji/php/zmien.php',{
+    return fetch('http://localhost/system_reklamacji/php/zmien.php',{
        method:'POST',
        headers:{
          'Accept': 'application/json',
@@ -74,7 +74,7 @@ export function PokazAll(e){
   if(answer=prompt('Chcesz dodać komentarz do zmiany?',''))
   {}
   else{answer="Przekazano zgłoszenie dalej";}
-  return fetch('http://10.44.50.28/system_reklamacji/php/zmienkryterium.php',{
+  return fetch('http://localhost/system_reklamacji/php/zmienkryterium.php',{
      method:'POST',
      headers:{
        'Accept': 'application/json',
@@ -98,7 +98,7 @@ export function PokazAll(e){
  }
 
  export function ReklamacjaIndy(dane){
-    return fetch('http://10.44.50.28/system_reklamacji/php/pobierz_konkretny.php',{
+    return fetch('http://localhost/system_reklamacji/php/pobierz_konkretny.php',{
         method:'POST',
         headers:{
           'Accept': 'application/json',
@@ -113,7 +113,7 @@ export function PokazAll(e){
  }
 
  export function WprowadzReklamacje(dane){
-  return fetch('http://10.44.50.28/system_reklamacji/php/wyslij_reklamacje_trans.php',{
+  return fetch('http://localhost/system_reklamacji/php/wyslij_reklamacje_trans.php',{
     method:'POST',
     headers:{
       'Accept': 'application/json',

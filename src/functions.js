@@ -32,7 +32,7 @@ class Popup extends React.Component{
 
   componentDidMount =() =>{
     
-    fetch("http://10.44.50.28/system_reklamacji/php/pobierz_konkretny.php",{
+    fetch("http://localhost/system_reklamacji/php/pobierz_konkretny.php",{
       method:'POST',
       headers:{
         'Accept': 'application/json',
