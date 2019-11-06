@@ -367,6 +367,22 @@ img[alt]:after {
   
   border:6px #f3ab01 solid;
 }
+.srodek2{
+  display:block;
+  position: absolute;
+  margin:0;
+  
+  left:30%;
+  padding:30px;
+  z-index: 1;
+  
+  -ms-transform:translate(-10%,-10%);
+  transform: translate(-10%,-10%);
+  
+  min-height:50%;
+  text-align: center;
+  
+}
 .logout{
 	background-color:white;
 	border:none;
@@ -584,4 +600,21 @@ textarea{
   border:5px #f3ab01 solid;
   min-height: 100px;
   background-color: white;
+}
+input{
+border: 1px #f3ab01 solid;
+color:#cc8f01;
+padding:2px;
+}
+.sorter:hover{
+  border: 0px solid;
+  background-color: #f3ab01;
+  color:white;
+  cursor: pointer;
+}
+.filtry{
+  padding-top:10px;
+  padding-bottom: 5px;
+  background-color: #f3ab01;
+  color:white;
 }
